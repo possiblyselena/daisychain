@@ -1,6 +1,6 @@
 <script lang="ts">
 	import heroPcb from '#lib/assets/landing/hero-pcb.png';
-	import esp32Board from '#lib/assets/landing/esp32-board.png';
+	import esp32Board from '#lib/assets/parts/esp32-c3-devboard.webp';
 	import sensorBoard from '#lib/assets/landing/sensor-board.png';
 	import oled from '#lib/assets/landing/oled.png';
 	import selena from '#lib/assets/landing/selena.png';
@@ -30,7 +30,7 @@
 
 	const parts: Part[] = [
 		{
-			name: 'ESP32 microcontroller',
+			name: 'ESP32-C3 microcontroller',
 			blurb: 'The brain of your hairclip. It runs your code and talks to the screen and sensors.',
 			src: esp32Board,
 			class: 'md:absolute md:left-[111px] md:top-0 md:h-[120px] md:w-[161px]',
@@ -119,7 +119,7 @@
 						class="block size-full cursor-help rounded-md transition-transform duration-150 group-hover:scale-110 focus-visible:scale-110 focus-visible:outline-2 focus-visible:outline-black"
 						aria-describedby="tip-{part.name}"
 					>
-						<img src={part.src} alt={part.name} class="pointer-events-none size-full object-cover" />
+						<img src={part.src} alt={part.name} class="pointer-events-none size-full object-contain" />
 					</button>
 					<div
 						id="tip-{part.name}"

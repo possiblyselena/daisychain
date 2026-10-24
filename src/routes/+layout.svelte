@@ -2,6 +2,7 @@
 	import './layout.css';
 	import favicon from '#lib/assets/favicon.svg';
 	import SiteNav from '#lib/components/SiteNav.svelte';
+	import { playPop } from '#lib/sound/pop.ts';
 	import { setupConvex } from 'convex-svelte';
 	import { PUBLIC_CONVEX_URL } from '$app/env/public';
 	import type { LayoutProps } from './$types';
@@ -11,6 +12,9 @@
 	// Connect every page to the Convex backend (URL comes from .env.local).
 	setupConvex(PUBLIC_CONVEX_URL);
 </script>
+
+<!-- Every click anywhere on the site makes a little bubble pop. -->
+<svelte:window onclickcapture={playPop} />
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
