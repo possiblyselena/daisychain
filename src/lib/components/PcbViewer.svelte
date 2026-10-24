@@ -6,12 +6,37 @@
 		src: string;
 		/** Image shown until the model has loaded, and if WebGL isn't available. */
 		poster: string;
+		/**
+		 * The part of the poster image (in its own pixels) that holds the board plus a little
+		 * breathing room. The poster is cropped to this so it lines up with the 3D model.
+		 * Give the wrapper the same aspect ratio as this crop.
+		 */
+		posterCrop?: { x: number; y: number; width: number; height: number };
+		/** The poster image's full size in pixels (needed for posterCrop). */
+		posterSize?: { width: number; height: number };
+		/** Space around the board, as a multiple of its size (1.15 = 7.5% on each side). */
+		margin?: number;
 		alt: string;
 		/** Extra classes for the wrapper (size it here). */
 		class?: string;
 	};
 
-	let { src, poster, alt, class: className = '' }: Props = $props();
+	let {
+		src,
+		poster,
+		posterCrop,
+		posterSize,
+		margin = 1.15,
+		alt,
+		class: className = ''
+	}: Props = $props();
+
+	// Scale and shift the poster so only the crop area fills the wrapper.
+	const posterStyle = $derived(
+		posterCrop && posterSize
+			? `left: ${(-posterCrop.x / posterCrop.width) * 100}%; top: ${(-posterCrop.y / posterCrop.height) * 100}%; width: ${(posterSize.width / posterCrop.width) * 100}%; height: ${(posterSize.height / posterCrop.height) * 100}%;`
+			: ''
+	);
 
 	let container: HTMLDivElement;
 	let loaded = $state(false);
@@ -50,7 +75,8 @@
 			sun.position.set(1, 2, 3);
 			scene.add(sun);
 
-			const camera = new THREE.PerspectiveCamera(30, 1, 0.01, 100);
+			// A narrow field of view keeps perspective subtle, so the board looks like the flat render.
+			const camera = new THREE.PerspectiveCamera(20, 1, 0.01, 100);
 
 			// The model spins inside this pivot so it always turns around its own centre.
 			const pivot = new THREE.Group();
@@ -80,9 +106,9 @@
 				renderer.setSize(w, h, false);
 				camera.aspect = w / h;
 				const vFov = THREE.MathUtils.degToRad(camera.fov);
-				const fitHeight = (size.y * 1.15) / 2 / Math.tan(vFov / 2);
-				const fitWidth = (size.x * 1.15) / 2 / Math.tan(vFov / 2) / camera.aspect;
-				camera.position.set(0, 0, Math.max(fitHeight, fitWidth) + size.z);
+				const fitHeight = (size.y * margin) / 2 / Math.tan(vFov / 2);
+				const fitWidth = (size.x * margin) / 2 / Math.tan(vFov / 2) / camera.aspect;
+				camera.position.set(0, 0, Math.max(fitHeight, fitWidth));
 				camera.lookAt(0, 0, 0);
 				camera.updateProjectionMatrix();
 			};
@@ -158,8 +184,9 @@
 	<img
 		src={poster}
 		alt=""
-		class="absolute inset-0 size-full object-contain transition-opacity duration-500 {loaded
-			? 'opacity-0'
-			: 'opacity-100'}"
+		style={posterStyle}
+		class="absolute max-w-none transition-opacity duration-500 {posterStyle
+			? ''
+			: 'inset-0 size-full object-contain'} {loaded ? 'opacity-0' : 'opacity-100'}"
 	/>
 </div>

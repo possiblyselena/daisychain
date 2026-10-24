@@ -83,23 +83,26 @@
 	</header>
 
 	<main class="mx-auto max-w-[1280px] px-4 md:px-[47px]">
-		<!-- Hero -->
-		<section class="flex flex-col items-center pt-12 md:pt-[71px]">
-			<h1
-				class="w-full text-center text-[32px] leading-tight font-medium md:text-left md:text-[52.667px] md:leading-normal"
-			>
+		<!-- Hero: fills the first screen, like the Figma frame (1280×832). -->
+		<section
+			class="flex min-h-[calc(100svh-75px)] flex-col items-center justify-center py-[clamp(24px,6svh,80px)]"
+		>
+			<h1 class="text-center text-[24px] leading-tight font-medium md:text-[40px] md:leading-normal">
 				Learn how to Design + Program a Hardware Hairclip
 			</h1>
+			<!--
+				The board shrinks to fit short screens: its width is capped by the space left after
+				the navbar, heading and button (463px on desktop), times the board's aspect ratio.
+			-->
 			<PcbViewer
 				src={pcbModel}
 				poster={heroPcb}
+				posterSize={{ width: 1022, height: 606 }}
+				posterCrop={{ x: 27, y: 109, width: 963, height: 413 }}
 				alt="The Daisy Chain hairclip circuit board, with an OLED screen and the words Daisy Chain in pixel lettering"
-				class="-mt-4 aspect-[925/549] w-full max-w-[925px] md:-mt-[22px]"
+				class="my-[clamp(16px,4svh,40px)] aspect-[963/413] w-[min(872px,100%,max(280px,calc((100svh_-_463px)_*_2.33)))]"
 			/>
-			<a
-				href={getStartedHref}
-				class="-mt-4 text-[48px] leading-normal md:-mt-[37px] md:text-[78.654px]"
-			>
+			<a href={getStartedHref} class="text-[48px] leading-tight md:text-[78.654px] md:leading-normal">
 				Get Started Here.
 			</a>
 		</section>
