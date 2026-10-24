@@ -4,7 +4,8 @@
 	import CodeEditor from '#lib/components/ide/CodeEditor.svelte';
 	import SerialConsole from '#lib/components/ide/SerialConsole.svelte';
 	import DoodlePad from '#lib/components/ide/DoodlePad.svelte';
-	import { doodleProgram, oledSetup } from '#lib/board/oled.ts';
+	import DaisyChainPanel from '#lib/components/ide/DaisyChainPanel.svelte';
+	import { doodleProgram, hexToPixels, oledSetup } from '#lib/board/oled.ts';
 
 	// Starter program: the OLED "hello world". The top line shows yellow, the rest blue.
 	const STARTER_CODE = `${oledSetup}
@@ -74,6 +75,11 @@ print("Hello from your hairclip!")
 	const save = () => attempt(() => board.save(code));
 
 	// Doodle tab: show the drawing on the board, or turn it into Python code.
+	// Daisy chain: doodles friends send from their phones.
+	const showFriendDoodle = (hex: string, quiet: boolean) => sendDoodle(hexToPixels(hex), quiet);
+	const announceDoodle = (from: string | null) =>
+		terminal?.write(`\r\n🌼 New doodle from ${from ?? 'a friend'}!\r\n`, 'info');
+
 	async function sendDoodle(pixels: Uint8Array, quiet: boolean) {
 		await attempt(async () => {
 			await board.run(doodleProgram(pixels), { quiet });
@@ -171,6 +177,10 @@ print("Hello from your hairclip!")
 				{#if message}
 					<p class="text-[15px] text-red-700" role="alert">{message}</p>
 				{/if}
+			</div>
+
+			<div class="mt-8 w-full max-w-[340px]">
+				<DaisyChainPanel {canSend} onShow={showFriendDoodle} onArrive={announceDoodle} />
 			</div>
 		</section>
 

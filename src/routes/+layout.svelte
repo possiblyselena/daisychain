@@ -2,9 +2,14 @@
 	import './layout.css';
 	import favicon from '#lib/assets/favicon.svg';
 	import SiteNav from '#lib/components/SiteNav.svelte';
+	import { setupConvex } from 'convex-svelte';
+	import { PUBLIC_CONVEX_URL } from '$app/env/public';
 	import type { LayoutProps } from './$types';
 
 	let { children }: LayoutProps = $props();
+
+	// Connect every page to the Convex backend (URL comes from .env.local).
+	setupConvex(PUBLIC_CONVEX_URL);
 </script>
 
 <svelte:head>
