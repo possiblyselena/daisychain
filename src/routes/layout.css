@@ -1,4 +1,7 @@
-@import 'tailwindcss';
+/* Only scan our source code for class names, and skip binary assets like 3D models:
+   a large .glb in the project made Tailwind's scan hang the dev server. */
+@import 'tailwindcss' source('../');
+@source not '../lib/assets';
 
 @theme {
 	--font-karma: 'Karma', Georgia, serif;

@@ -6,6 +6,8 @@
 	import creatorExample from '#lib/assets/landing/creator-example.png';
 	import selena from '#lib/assets/landing/selena.png';
 	import footerBg from '#lib/assets/landing/footer.svg';
+	import pcbModel from '#lib/assets/models/daisychain.glb?url';
+	import PcbViewer from '#lib/components/PcbViewer.svelte';
 
 	// Where the "Get Started" links go. Point this at the IDE route once it exists.
 	const getStartedHref = '#what-is-it';
@@ -77,12 +79,11 @@
 			>
 				Learn how to Design + Program a Hardware Hairclip
 			</h1>
-			<img
-				src={heroPcb}
+			<PcbViewer
+				src={pcbModel}
+				poster={heroPcb}
 				alt="The Daisy Chain hairclip circuit board, with an OLED screen and the words Daisy Chain in pixel lettering"
-				width="925"
-				height="549"
-				class="-mt-4 w-full max-w-[925px] md:-mt-[22px]"
+				class="-mt-4 aspect-[925/549] w-full max-w-[925px] md:-mt-[22px]"
 			/>
 			<a
 				href={getStartedHref}
