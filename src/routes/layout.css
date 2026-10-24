@@ -1,1 +1,11 @@
 @import 'tailwindcss';
+
+@theme {
+	--font-karma: 'Karma', Georgia, serif;
+	--font-inter: 'Inter', system-ui, sans-serif;
+	--color-daisy: #ffed76;
+}
+
+html {
+	scroll-behavior: smooth;
+}
