@@ -6,6 +6,7 @@
 	import DoodlePad from '#lib/components/ide/DoodlePad.svelte';
 	import DaisyChainPanel from '#lib/components/ide/DaisyChainPanel.svelte';
 	import BlockEditor from '#lib/components/ide/BlockEditor.svelte';
+	import TutorPanel from '#lib/components/ide/TutorPanel.svelte';
 	import { doodleProgram, hexToPixels, oledSetup } from '#lib/board/oled.ts';
 
 	// Starter program: the OLED "hello world". The top line shows yellow, the rest blue.
@@ -40,7 +41,11 @@ print("Hello from your hairclip!")
 	const supported = Board.isSupported;
 	const board = new Board();
 	board.onStatus = (s) => (status = s);
-	board.onOutput = (text, kind) => terminal?.write(text, kind);
+	let lastError = $state('');
+	board.onOutput = (text, kind) => {
+		terminal?.write(text, kind);
+		if (kind === 'err') lastError += text;
+	};
 
 	const connected = $derived(status !== 'disconnected');
 	const canSend = $derived(status === 'idle' || status === 'running');
@@ -75,7 +80,10 @@ print("Hello from your hairclip!")
 	}
 
 	const toggleConnection = () => attempt(() => (connected ? board.disconnect() : board.connect()));
-	const run = () => attempt(() => board.run(programToRun));
+	const run = () => {
+		lastError = '';
+		return attempt(() => board.run(programToRun));
+	};
 	const stop = () => attempt(() => board.stop());
 	const save = () => attempt(() => board.save(programToRun));
 
@@ -245,6 +253,7 @@ print("Hello from your hairclip!")
 			<div class="h-[220px] border-2 border-black bg-black">
 				<SerialConsole bind:this={terminal} onInput={(keys) => void board.sendKeys(keys)} />
 			</div>
+			<TutorPanel code={programToRun} error={lastError} tab={activeTab} />
 		</section>
 	</div>
 </main>

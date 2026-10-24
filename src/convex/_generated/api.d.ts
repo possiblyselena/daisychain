@@ -10,6 +10,7 @@
 
 import type * as clips from "../clips.js";
 import type * as doodles from "../doodles.js";
+import type * as tutor from "../tutor.js";
 
 import type {
   ApiFromModules,
@@ -20,6 +21,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   clips: typeof clips;
   doodles: typeof doodles;
+  tutor: typeof tutor;
 }>;
 
 /**
