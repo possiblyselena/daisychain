@@ -3,7 +3,13 @@ import adapter from '@sveltejs/adapter-auto';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
+// Public tunnel addresses (Cloudflare Tunnel / ngrok) allowed to reach the dev and preview
+// servers, so phones can open the site before it's deployed.
+const tunnelHosts = ['.trycloudflare.com', '.ngrok-free.app'];
+
 export default defineConfig({
+	server: { allowedHosts: tunnelHosts },
+	preview: { allowedHosts: tunnelHosts },
 	plugins: [
 		tailwindcss(),
 		sveltekit({
