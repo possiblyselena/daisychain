@@ -1,6 +1,7 @@
 <script lang="ts">
 	import './layout.css';
 	import favicon from '#lib/assets/favicon.svg';
+	import SiteNav from '#lib/components/SiteNav.svelte';
 	import type { LayoutProps } from './$types';
 
 	let { children }: LayoutProps = $props();
@@ -16,4 +17,7 @@
 	/>
 </svelte:head>
 
-{@render children()}
+<div class="min-h-screen bg-white font-karma text-black">
+	<SiteNav />
+	{@render children()}
+</div>
