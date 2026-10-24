@@ -5,6 +5,7 @@
 	import SerialConsole from '#lib/components/ide/SerialConsole.svelte';
 	import DoodlePad from '#lib/components/ide/DoodlePad.svelte';
 	import DaisyChainPanel from '#lib/components/ide/DaisyChainPanel.svelte';
+	import BlockEditor from '#lib/components/ide/BlockEditor.svelte';
 	import { doodleProgram, hexToPixels, oledSetup } from '#lib/board/oled.ts';
 
 	// Starter program: the OLED "hello world". The top line shows yellow, the rest blue.
@@ -28,6 +29,10 @@ print("Hello from your hairclip!")
 	let activeTab = $state<TabId>('python');
 
 	let code = $state(loadCode());
+	// The MicroPython made from the blocks tab (kept up to date while that tab is open).
+	let blocksCode = $state('');
+	// Run and Save use the blocks when the blocks tab is open, otherwise the python code.
+	const programToRun = $derived(activeTab === 'blocks' && blocksCode ? blocksCode : code);
 	let status = $state<BoardStatus>('disconnected');
 	let message = $state('');
 	let terminal: SerialConsole | undefined = $state();
@@ -70,9 +75,9 @@ print("Hello from your hairclip!")
 	}
 
 	const toggleConnection = () => attempt(() => (connected ? board.disconnect() : board.connect()));
-	const run = () => attempt(() => board.run(code));
+	const run = () => attempt(() => board.run(programToRun));
 	const stop = () => attempt(() => board.stop());
-	const save = () => attempt(() => board.save(code));
+	const save = () => attempt(() => board.save(programToRun));
 
 	// Doodle tab: show the drawing on the board, or turn it into Python code.
 	// Daisy chain: doodles friends send from their phones.
@@ -90,6 +95,12 @@ print("Hello from your hairclip!")
 	function openDoodleAsCode(pixels: Uint8Array) {
 		if (!confirm('Replace the code in the python tab with your doodle?')) return;
 		code = doodleProgram(pixels);
+		activeTab = 'python';
+	}
+
+	function openBlocksAsCode(blocks: string) {
+		if (!confirm('Replace the code in the python tab with the code from your blocks?')) return;
+		code = blocks;
 		activeTab = 'python';
 	}
 
@@ -226,11 +237,7 @@ print("Hello from your hairclip!")
 					{:else if activeTab === 'doodle'}
 						<DoodlePad {canSend} onSend={sendDoodle} onOpenAsCode={openDoodleAsCode} />
 					{:else}
-						<div
-							class="grid size-full place-items-center p-6 text-center font-inter text-[20px] text-black/50"
-						>
-							Block coding is coming soon!
-						</div>
+						<BlockEditor onCode={(c) => (blocksCode = c)} onOpenAsCode={openBlocksAsCode} />
 					{/if}
 				</div>
 			</div>

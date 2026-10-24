@@ -1,7 +1,8 @@
 <script lang="ts">
-	// Placeholder "Get Started" page from the Figma "Wiring and Schematic" frame.
-	// The wiring diagram and the per-component guides aren't built yet.
-	import devboard from '#lib/assets/landing/esp32-board.png';
+	// "Get Started" page from the Figma "Wiring and Schematic" frame.
+	// The per-component guides (IMU, distance sensor, microphone) aren't built yet.
+	import WiringDiagram from '#lib/components/schematic/WiringDiagram.svelte';
+	import devboard from '#lib/assets/parts/esp32-c3-devboard.webp';
 	import display from '#lib/assets/landing/oled.png';
 	import imu from '#lib/assets/landing/sensor-board.png';
 	import distanceSensor from '#lib/assets/parts/distance-sensor.png';
@@ -50,10 +51,10 @@
 		<figure class="flex flex-col items-center justify-end">
 			<img
 				src={devboard}
-				alt="ESP32 dev board"
-				width="367"
-				height="274"
-				class="h-auto w-[280px] object-contain md:w-[367px]"
+				alt="ESP32-C3 dev board with an ESP32-C3-MINI-1 module, BOOT and EN buttons, and labelled pins"
+				width="800"
+				height="661"
+				class="h-auto w-[300px] object-contain md:w-[400px]"
 			/>
 			<figcaption class="mt-6 font-inter text-[28px] md:mt-[55px] md:text-[52px]">
 				this is your devboard!
@@ -75,13 +76,13 @@
 
 	<!-- Wiring -->
 	<section class="mt-16 md:mt-[77px]">
-		<h2 class="text-center text-[28px] leading-tight font-medium md:text-[52.667px] md:leading-normal">
+		<h2
+			class="text-center text-[28px] leading-tight font-medium md:text-[52.667px] md:leading-normal"
+		>
 			Here’s how the wiring works
 		</h2>
-		<div
-			class="mt-8 grid h-[320px] place-items-center rounded-lg border-2 border-dashed border-black/30 text-center font-inter text-[20px] text-black/50 md:h-[640px] md:text-[28px]"
-		>
-			Wiring diagram coming soon
+		<div class="mt-8">
+			<WiringDiagram />
 		</div>
 	</section>
 
