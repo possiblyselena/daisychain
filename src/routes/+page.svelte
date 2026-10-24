@@ -3,11 +3,17 @@
 	import esp32Board from '#lib/assets/landing/esp32-board.png';
 	import sensorBoard from '#lib/assets/landing/sensor-board.png';
 	import oled from '#lib/assets/landing/oled.png';
-	import creatorExample from '#lib/assets/landing/creator-example.png';
 	import selena from '#lib/assets/landing/selena.png';
 	import footerBg from '#lib/assets/landing/footer.svg';
 	import pcbModel from '#lib/assets/models/daisychain.glb?url';
 	import PcbViewer from '#lib/components/PcbViewer.svelte';
+	import ReelCarousel, { type Reel } from '#lib/components/ReelCarousel.svelte';
+	import mewtru from '#lib/assets/creators/mewtru.webp';
+	import zoeylix from '#lib/assets/creators/zoeylix.webp';
+	import sagecadence from '#lib/assets/creators/sagecadence.webp';
+	import tinahelloworld from '#lib/assets/creators/tinahelloworld.webp';
+	import meshtimes from '#lib/assets/creators/meshtimes.webp';
+	import littlebitaisha from '#lib/assets/creators/littlebitaisha.webp';
 
 	// Where the "Get Started" links go. Point this at the IDE route once it exists.
 	const getStartedHref = '#what-is-it';
@@ -46,11 +52,16 @@
 		}
 	];
 
-	// Placeholder creator posts from the design (all the same image for now).
-	const creators = Array.from({ length: 4 }, (_, i) => ({
-		src: creatorExample,
-		alt: `Creator example ${i + 1}: a hand holding a magic 8 ball hairclip with a round screen`
-	}));
+	// Instagram reels from creators who built their own hairclips.
+	// `id` is the part after /reel/ in the link; thumbnails live in src/lib/assets/creators.
+	const creatorReels: Reel[] = [
+		{ id: 'DdFNvpARXFX', handle: 'mewtru', thumb: mewtru },
+		{ id: 'Dd4etFMRgWp', handle: 'zoeylix', thumb: zoeylix },
+		{ id: 'DeJ8u0ZTpNZ', handle: 'sagecadence_', thumb: sagecadence },
+		{ id: 'Defm9bXhpdV', handle: 'tinahelloworld', thumb: tinahelloworld },
+		{ id: 'DdcJwrEtD6B', handle: 'meshtimes', thumb: meshtimes },
+		{ id: 'Dej_VvGtXQv', handle: 'littlebitaisha', thumb: littlebitaisha }
+	];
 </script>
 
 <svelte:head>
@@ -139,19 +150,9 @@
 			<h2 class="text-[28px] md:pl-[10px] md:text-[43.565px]">
 				Here’s some examples of creators who have made their own!
 			</h2>
-			<ul class="mt-6 grid grid-cols-2 gap-4 md:mt-[29px] md:grid-cols-4 md:gap-[47px]">
-				{#each creators as creator, i (i)}
-					<li>
-						<img
-							src={creator.src}
-							alt={creator.alt}
-							width="259"
-							height="466"
-							class="aspect-[259/466] w-full object-cover"
-						/>
-					</li>
-				{/each}
-			</ul>
+			<div class="mt-6 md:mt-[29px]">
+				<ReelCarousel reels={creatorReels} label="Hairclips made by other creators" />
+			</div>
 		</section>
 
 		<!-- About -->
