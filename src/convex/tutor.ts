@@ -1,5 +1,5 @@
 import { ConvexError, v } from 'convex/values';
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI, ThinkingLevel } from '@google/genai';
 import { action } from './_generated/server';
 
 const TUTOR_RULES = `You are a friendly coding tutor inside Daisy Chain, a web IDE for a hardware hairclip.
@@ -16,6 +16,20 @@ How to teach:
 - Write plain text with no Markdown symbols like ** or #. Put code on its own lines.
 - Only help with this hairclip, electronics and coding. Politely decline anything else.`;
 
+/**
+ * Models to try, in order. When one is overloaded (Google's 503 "high demand"), rate limited
+ * or too slow, the tutor moves on to the next one so students still get an answer.
+ * Low thinking makes the first words arrive sooner.
+ */
+const MODELS: { model: string; thinkingLevel?: ThinkingLevel }[] = [
+	{ model: 'gemini-3.8-flash', thinkingLevel: ThinkingLevel.LOW },
+	{ model: 'gemini-3.6-flash', thinkingLevel: ThinkingLevel.LOW },
+	{ model: 'gemini-3.5-flash-lite' }
+];
+
+/** How long to wait for each model before trying the next one. */
+const TIMEOUT_MS = 12_000;
+
 export const ask = action({
 	args: { question: v.string(), code: v.string(), error: v.string(), tab: v.string() },
 	handler: async (_ctx, { question, code, error, tab }) => {
@@ -29,17 +43,26 @@ export const ask = action({
 			`Their question: ${question}`
 		].join('\n\n');
 
-		try {
-			const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-			const response = await ai.models.generateContent({
-				model: 'gemini-3.8-flash',
-				contents: prompt,
-				config: { systemInstruction: TUTOR_RULES, maxOutputTokens: 1024 }
-			});
-			return response.text ?? '';
-		} catch (e) {
-			console.error(e); // shows up in the Convex dashboard's Logs
-			throw new ConvexError('The tutor is busy right now. Try again in a minute!');
+		const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+		for (const { model, thinkingLevel } of MODELS) {
+			try {
+				const response = await ai.models.generateContent({
+					model,
+					contents: prompt,
+					config: {
+						systemInstruction: TUTOR_RULES,
+						maxOutputTokens: 1024,
+						thinkingConfig: thinkingLevel ? { thinkingLevel } : undefined,
+						httpOptions: { timeout: TIMEOUT_MS }
+					}
+				});
+				if (response.text) return response.text;
+				console.warn(`${model} gave an empty answer, trying the next model`);
+			} catch (e) {
+				// Shows up in the Convex dashboard's Logs.
+				console.error(`${model} failed, trying the next model:`, e);
+			}
 		}
+		throw new ConvexError('The tutor is busy right now. Try again in a minute!');
 	}
 });
