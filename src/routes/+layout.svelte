@@ -2,6 +2,7 @@
 	import './layout.css';
 	import favicon from '#lib/assets/favicon.svg';
 	import SiteNav from '#lib/components/SiteNav.svelte';
+	import CursorTrail from '#lib/components/CursorTrail.svelte';
 	import { playPop } from '#lib/sound/pop.ts';
 	import { setupConvex } from 'convex-svelte';
 	import { PUBLIC_CONVEX_URL } from '$app/env/public';
@@ -28,5 +29,6 @@
 
 <div class="min-h-screen bg-white font-karma text-black">
 	<SiteNav />
+	<CursorTrail />
 	{@render children()}
 </div>

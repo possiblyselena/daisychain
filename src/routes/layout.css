@@ -12,3 +12,30 @@
 html {
 	scroll-behavior: smooth;
 }
+
+/* Daisy cursor. Lives in the base layer so Tailwind classes like cursor-not-allowed,
+   cursor-crosshair and cursor-help still take over where they are used. */
+@layer base {
+	html {
+		cursor:
+			url('/cursors/daisy.svg') 16 16,
+			auto;
+	}
+	a,
+	button,
+	label,
+	select,
+	summary,
+	[role='button'] {
+		cursor:
+			url('/cursors/daisy-hover.svg') 16 16,
+			pointer;
+	}
+	/* Keep the normal text cursor where people type. */
+	input,
+	textarea,
+	[contenteditable='true'],
+	.cm-content {
+		cursor: text;
+	}
+}
