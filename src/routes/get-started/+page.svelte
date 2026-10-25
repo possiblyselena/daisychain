@@ -6,6 +6,7 @@
 	import display from '#lib/assets/landing/oled.png';
 	import imu from '#lib/assets/landing/sensor-board.png';
 	import distanceSensor from '#lib/assets/parts/distance-sensor.png';
+	import microphone from '#lib/assets/parts/microphone.webp';
 
 	type Component = {
 		name: string;
@@ -28,7 +29,15 @@
 			},
 			class: 'md:mt-[61px]'
 		},
-		{ name: 'Microphone', class: 'md:mt-[10px]' }
+		{
+			name: 'Microphone',
+			image: {
+				src: microphone,
+				alt: 'Microphone sound sensor board',
+				class: 'h-[211px] w-[280px] max-w-full'
+			},
+			class: 'md:mt-[10px]'
+		}
 	];
 
 	// Which component's "coming soon" note is showing.

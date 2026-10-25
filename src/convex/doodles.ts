@@ -21,6 +21,28 @@ export const send = mutation({
 	}
 });
 
+/** The owner of a hairclip deletes a doodle they received. */
+export const remove = mutation({
+	args: { id: v.id('doodles'), ownerKey: v.string() },
+	returns: v.null(),
+	handler: async (ctx, { id, ownerKey }) => {
+		const doodle = await ctx.db.get('doodles', id);
+		if (!doodle) return null; // Already deleted.
+		const clip = await ctx.db.get('clips', doodle.clipId);
+		if (!clip) return null;
+		if (clip.ownerKey === undefined) {
+			// Links made before deleting existed have no key yet: the owner's first delete claims it.
+			if (ownerKey.length < 16 || ownerKey.length > 100)
+				throw new ConvexError('Invalid owner key.');
+			await ctx.db.patch('clips', clip._id, { ownerKey });
+		} else if (clip.ownerKey !== ownerKey) {
+			throw new ConvexError('Only the owner of this hairclip can delete its doodles.');
+		}
+		await ctx.db.delete('doodles', id);
+		return null;
+	}
+});
+
 /** The newest doodles sent to a hairclip (newest first). Updates live. */
 export const latest = query({
 	args: { slug: v.string() },
@@ -42,7 +64,7 @@ export const latest = query({
 			.query('doodles')
 			.withIndex('by_clipId', (q) => q.eq('clipId', clip._id))
 			.order('desc')
-			.take(12);
+			.take(50);
 		return doodles.map(({ _id, _creationTime, pixels, from }) => ({
 			_id,
 			_creationTime,

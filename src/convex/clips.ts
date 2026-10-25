@@ -40,11 +40,15 @@ const NOUNS = [
 
 const pick = (list: string[]) => list[Math.floor(Math.random() * list.length)];
 
-/** Creates a new hairclip with a friendly, unique share-link name like "sparkly-bunny-42". */
+/**
+ * Creates a new hairclip with a friendly, unique share-link name like "sparkly-bunny-42".
+ * `ownerKey` is a secret made in the owner's browser; it's needed later to delete doodles.
+ */
 export const create = mutation({
-	args: {},
+	args: { ownerKey: v.string() },
 	returns: v.string(),
-	handler: async (ctx) => {
+	handler: async (ctx, { ownerKey }) => {
+		if (ownerKey.length < 16 || ownerKey.length > 100) throw new Error('Invalid owner key.');
 		for (let attempt = 0; attempt < 20; attempt++) {
 			const slug = `${pick(ADJECTIVES)}-${pick(NOUNS)}-${Math.floor(Math.random() * 90) + 10}`;
 			const taken = await ctx.db
@@ -52,7 +56,7 @@ export const create = mutation({
 				.withIndex('by_slug', (q) => q.eq('slug', slug))
 				.unique();
 			if (!taken) {
-				await ctx.db.insert('clips', { slug });
+				await ctx.db.insert('clips', { slug, ownerKey });
 				return slug;
 			}
 		}

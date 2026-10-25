@@ -1,56 +1,35 @@
-# sv
+# Daisy Chain!
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Daisy Chain is a beginner-friendly web IDE for coding your own hardware hairclip! Write Python, snap blocks together, or draw pixel art, and it runs on a tiny OLED screen straight from your browser, with nothing to install. It's inspired by the viral "hardware hairclips" and made for girls in tech, or anyone who wants to get into it!
 
-## Creating a project
+## Tech Stack
 
-If you're seeing this, you've probably already done this step. Congrats!
+**Frontend**
+- SvelteKit + Svelte 5 (TypeScript)
+- Vite
+- Tailwind CSS
+- Hosted on Vercel
 
-```sh
-# create a new project
-npx sv create my-app
-```
+**Backend**
+- Convex (live doodles from friends + AI tutor)
+- Google Gemini API
 
-To recreate this project with the same configuration:
+**Board Connection**
+- Web Serial API
+- MicroPython raw REPL
 
-```sh
-# recreate this project
-npx sv@1.1.1 create --template minimal --types ts --add prettier tailwindcss="plugins:none" --install npm daisychain
-```
+**Libraries**
+- CodeMirror 6
+- Blockly
+- xterm.js
+- three.js
+- uqr
 
-## Adding features
+**Hardware used (whatever I could find)**
+- ESP32-C3 Mini running MicroPython
+- 0.96" SSD1306 OLED
+- Tiny Bredboard
 
-Add features to your project with `sv add`:
-
-```sh
-npx sv add
-```
-
-For example, to add Tailwind CSS:
-
-```sh
-npx sv add tailwindcss
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+**Design**
+- Figma for the website and block designs
+- KiCad for the hairclip's PCB. The 3D model on the website comes straight from it :]

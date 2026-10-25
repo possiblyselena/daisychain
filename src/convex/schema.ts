@@ -4,7 +4,12 @@ import { v } from 'convex/values';
 export default defineSchema({
 	/** A hairclip that friends can send doodles to, found by its share-link name. */
 	clips: defineTable({
-		slug: v.string()
+		slug: v.string(),
+		/**
+		 * Secret kept in the owner's browser. Only the owner can delete doodles.
+		 * Optional because links made before deleting existed don't have one yet.
+		 */
+		ownerKey: v.optional(v.string())
 	}).index('by_slug', ['slug']),
 
 	/** A doodle a friend sent to a hairclip. */

@@ -149,16 +149,9 @@ print("Hello from your hairclip!")
 	{/if}
 
 	<div class="mt-8 grid gap-10 lg:mt-[41px] lg:grid-cols-[minmax(0,1fr)_692px] lg:gap-[40px]">
-		<!-- Left: demo display and board controls -->
-		<section aria-label="Your board" class="flex flex-col items-center lg:pt-[120px]">
-			<div
-				class="h-[222px] w-[307px] max-w-full bg-black"
-				role="img"
-				aria-label="Demo display (preview coming soon)"
-			></div>
-			<p class="mt-4 text-[32px] font-medium md:text-[52.667px]">demo display</p>
-
-			<div class="mt-6 flex w-full max-w-[340px] flex-col gap-3 font-inter text-[18px]">
+		<!-- Left: board controls -->
+		<section aria-label="Your board" class="flex flex-col items-center">
+			<div class="flex w-full max-w-[340px] flex-col gap-3 font-inter text-[18px]">
 				<p class="flex items-center gap-2" aria-live="polite">
 					<span
 						class="size-3 rounded-full {status === 'running'

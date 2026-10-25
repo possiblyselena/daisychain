@@ -171,6 +171,6 @@
 	<p
 		class="relative mx-auto flex h-full max-w-[1280px] items-center px-4 text-[26px] font-bold md:px-[10px] md:text-[41.214px]"
 	>
-		this project is open-source!
+		this project is <a href="https://github.com/possiblyselena/daisychain" class="px-3 underline"> open-source </a>  (please make it better!)
 	</p>
 </footer>
